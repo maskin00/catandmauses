@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кот ловит мышей</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(45deg, #8B4513, #A0522D);
+            overflow: hidden;
+            cursor: none;
+        }
+
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    #8B4513 0px,
+                    #A0522D 2px,
+                    #CD853F 4px,
+                    #DEB887 6px,
+                    #D2B48C 8px,
+                    #8B4513 120px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(139, 69, 19, 0.8) 0px,
+                    rgba(160, 82, 45, 0.8) 15px,
+                    rgba(205, 133, 63, 0.8) 30px,
+                    rgba(222, 184, 135, 0.8) 45px,
+                    rgba(210, 180, 140, 0.8) 60px,
+                    rgba(139, 69, 19, 0.8) 150px
+                );
+            background-size: 120px 120px, 150px 150px;
+            animation: floorShine 4s ease-in-out infinite alternate;
+        }
+
+        .game-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent 0px,
+                    rgba(0, 0, 0, 0.2) 1px,
+                    transparent 2px,
+                    transparent 120px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent 0px,
+                    rgba(0, 0, 0, 0.15) 1px,
+                    transparent 3px,
+                    transparent 150px
+                ),
+                radial-gradient(ellipse at 20% 30%, rgba(0, 0, 0, 0.1) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(0, 0, 0, 0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .score {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(139, 69, 19, 0.9);
+            color: #F5DEB3;
+            padding: 15px 25px;
+            border-radius: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 3px solid #DEB887;
+            z-index: 1000;
+        }
+
+        .cat {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            transition: all 0.2s ease;
+            z-index: 100;
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+        }
+
+        .cat-body {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 35% 25%, #2C2C2C, #1A1A1A, #000000);
+            border-radius: 45% 45% 55% 55%;
+            position: relative;
+            animation: catBreathe 2.5s ease-in-out infinite;
+            border: 1px solid #333;
+        }
+
+        .cat-ears {
+            position: absolute;
+            top: -12px;
+        }
+
+        .cat-ear {
+            width: 18px;
+            height: 25px;
+            background: linear-gradient(45deg, #2C2C2C, #1A1A1A, #000000);
+            border-radius: 70% 30% 20% 80%;
+            position: absolute;
+            border: 1px solid #333;
+        }
+
+        .cat-ear::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 10px;
+            height: 15px;
+            background: linear-gradient(45deg, #FF69B4, #FF1493);
+            border-radius: 60% 40% 40% 60%;
+        }
+
+        .cat-ear:first-child {
+            left: 15px;
+            transform: rotate(-25deg);
+        }
+
+        .cat-ear:last-child {
+            right: 15px;
+            transform: rotate(25deg);
+        }
+
+        .cat-face {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .cat-eyes {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 8px;
+            justify-content: center;
+        }
+
+        .cat-eye {
+            width: 12px;
+            height: 14px;
+            background: radial-gradient(ellipse at 30% 30%, #32CD32, #228B22, #006400);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: catBlink 4s infinite;
+            position: relative;
+        }
+
+        .cat-eye::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            width: 3px;
+            height: 8px;
+            background: #000;
+            border-radius: 50%;
+        }
+
+        .cat-nose {
+            width: 8px;
+            height: 6px;
+            background: linear-gradient(45deg, #FF69B4, #FF1493);
+            border-radius: 50% 50% 40% 40%;
+            margin: 0 auto 5px;
+            border: 1px solid #C71585;
+        }
+
+        .cat-mouth {
+            width: 16px;
+            height: 8px;
+            border: 2px solid #2C2C2C;
+            border-top: none;
+            border-radius: 0 0 60% 60%;
+            position: relative;
+        }
+
+        .cat-mouth::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 6px;
+            width: 2px;
+            height: 8px;
+            background: #2C2C2C;
+        }
+
+        .cat-tail {
+            position: absolute;
+            width: 6px;
+            height: 35px;
+            background: linear-gradient(to bottom, #2C2C2C, #1A1A1A, #000000);
+            border-radius: 3px;
+            right: -3px;
+            top: 25px;
+            transform-origin: top;
+            animation: catTailWag 1.2s ease-in-out infinite alternate;
+            border: 1px solid #333;
+        }
+
+        .cat-whiskers {
+            position: absolute;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 20px;
+        }
+
+        .cat-whisker {
+            position: absolute;
+            width: 20px;
+            height: 1px;
+            background: #666;
+            border-radius: 1px;
+        }
+
+        .cat-whisker:nth-child(1) { top: 5px; left: 0; transform: rotate(-15deg); }
+        .cat-whisker:nth-child(2) { top: 10px; left: 2px; transform: rotate(-5deg); }
+        .cat-whisker:nth-child(3) { top: 5px; right: 0; transform: rotate(15deg); }
+        .cat-whisker:nth-child(4) { top: 10px; right: 2px; transform: rotate(5deg); }
+
+        .mouse {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            z-index: 50;
+            animation: mouseMove 2.5s linear infinite;
+            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+        }
+
+        .mouse-body {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 40% 30%, #E5E5E5, #B8B8B8, #8C8C8C, #696969);
+            border-radius: 55% 45% 45% 55%;
+            position: relative;
+            border: 1px solid #5A5A5A;
+        }
+
+        .mouse-ears {
+            position: absolute;
+            top: -6px;
+            left: 8px;
+        }
+
+        .mouse-ear {
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle at 30% 30%, #E5E5E5, #B8B8B8, #8C8C8C);
+            border-radius: 50%;
+            position: absolute;
+            border: 1px solid #5A5A5A;
+        }
+
+        .mouse-ear::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, #FFB6C1, #FF69B4);
+            border-radius: 50%;
+        }
+
+        .mouse-ear:first-child {
+            left: 0;
+        }
+
+        .mouse-ear:last-child {
+            left: 8px;
+        }
+
+        .mouse-tail {
+            position: absolute;
+            width: 3px;
+            height: 28px;
+            background: linear-gradient(to bottom, #B8B8B8, #8C8C8C, #696969);
+            border-radius: 2px;
+            right: -2px;
+            top: 12px;
+            transform-origin: top;
+            animation: mouseTailWag 1.8s ease-in-out infinite alternate;
+            border: 1px solid #5A5A5A;
+        }
+
+        .mouse-eyes {
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .mouse-eye {
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #000, #333);
+            border-radius: 50%;
+            animation: mouseBlink 3.5s infinite;
+        }
+
+        .mouse-nose {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 2px;
+            background: #FF69B4;
+            border-radius: 50%;
+        }
+
+        .mouse-whiskers {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 10px;
+        }
+
+        .mouse-whisker {
+            position: absolute;
+            width: 12px;
+            height: 0.5px;
+            background: #444;
+            border-radius: 1px;
+        }
+
+        .mouse-whisker:nth-child(1) { top: 2px; left: 0; transform: rotate(-10deg); }
+        .mouse-whisker:nth-child(2) { top: 5px; left: 1px; transform: rotate(-3deg); }
+        .mouse-whisker:nth-child(3) { top: 2px; right: 0; transform: rotate(10deg); }
+        .mouse-whisker:nth-child(4) { top: 5px; right: 1px; transform: rotate(3deg); }
+
+        .catch-effect {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 3px solid #FFD700;
+            border-radius: 50%;
+            animation: catchEffect 0.5s ease-out;
+            pointer-events: none;
+            z-index: 200;
+        }
+
+        @keyframes floorShine {
+            0% { filter: brightness(0.9); }
+            100% { filter: brightness(1.1); }
+        }
+
+        @keyframes catBreathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes catBlink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+
+        @keyframes catTailWag {
+            0% { transform: rotate(-15deg); }
+            100% { transform: rotate(15deg); }
+        }
+
+        @keyframes mouseMove {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-2px); }
+        }
+
+        @keyframes mouseTailWag {
+            0% { transform: rotate(-10deg); }
+            100% { transform: rotate(10deg); }
+        }
+
+        @keyframes mouseBlink {
+            0%, 92%, 100% { transform: scaleY(1); }
+            96% { transform: scaleY(0.1); }
+        }
+
+        @keyframes catchEffect {
+            0% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .game-title {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: #F5DEB3;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <div class="score">Мыши: <span id="scoreValue">0</span></div>
+        <div class="game-title">🐱 Охота за мышами 🐭</div>
+        
+        <div class="cat" id="cat">
+            <div class="cat-body">
+                <div class="cat-ears">
+                    <div class="cat-ear"></div>
+                    <div class="cat-ear"></div>
+                </div>
+                <div class="cat-face">
+                    <div class="cat-eyes">
+                        <div class="cat-eye"></div>
+                        <div class="cat-eye"></div>
+                    </div>
+                    <div class="cat-nose"></div>
+                    <div class="cat-mouth"></div>
+                </div>
+                <div class="cat-whiskers">
+                    <div class="cat-whisker"></div>
+                    <div class="cat-whisker"></div>
+                    <div class="cat-whisker"></div>
+                    <div class="cat-whisker"></div>
+                </div>
+                <div class="cat-tail"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById('gameContainer');
+        const cat = document.getElementById('cat');
+        const scoreElement = document.getElementById('scoreValue');
+        
+        let score = 0;
+        let mice = [];
+        let catPosition = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+        // Устанавливаем начальную позицию кота
+        updateCatPosition();
+
+        // Движение кота за курсором
+        document.addEventListener('mousemove', (e) => {
+            catPosition.x = e.clientX - 40; // центрируем кота (размер увеличился)
+            catPosition.y = e.clientY - 40;
+            updateCatPosition();
+        });
+
+        function updateCatPosition() {
+            cat.style.left = catPosition.x + 'px';
+            cat.style.top = catPosition.y + 'px';
+        }
+
+        function createMouse() {
+            const mouse = document.createElement('div');
+            mouse.className = 'mouse';
+            
+            // Случайная позиция для мыши
+            const x = Math.random() * (window.innerWidth - 35);
+            const y = Math.random() * (window.innerHeight - 35);
+            
+            mouse.style.left = x + 'px';
+            mouse.style.top = y + 'px';
+            
+            mouse.innerHTML = `
+                <div class="mouse-body">
+                    <div class="mouse-ears">
+                        <div class="mouse-ear"></div>
+                        <div class="mouse-ear"></div>
+                    </div>
+                    <div class="mouse-eyes">
+                        <div class="mouse-eye"></div>
+                        <div class="mouse-eye"></div>
+                    </div>
+                    <div class="mouse-nose"></div>
+                    <div class="mouse-whiskers">
+                        <div class="mouse-whisker"></div>
+                        <div class="mouse-whisker"></div>
+                        <div class="mouse-whisker"></div>
+                        <div class="mouse-whisker"></div>
+                    </div>
+                    <div class="mouse-tail"></div>
+                </div>
+            `;
+            
+            gameContainer.appendChild(mouse);
+            mice.push({
+                element: mouse,
+                x: x,
+                y: y
+            });
+
+            // Удаляем мышь через 8 секунд, если её не поймали
+            setTimeout(() => {
+                if (gameContainer.contains(mouse)) {
+                    gameContainer.removeChild(mouse);
+                    mice = mice.filter(m => m.element !== mouse);
+                }
+            }, 8000);
+        }
+
+        function checkCollisions() {
+            mice.forEach((mouse, index) => {
+                const mouseRect = mouse.element.getBoundingClientRect();
+                const catRect = cat.getBoundingClientRect();
+                
+                // Проверяем столкновение
+                if (catRect.left < mouseRect.right &&
+                    catRect.right > mouseRect.left &&
+                    catRect.top < mouseRect.bottom &&
+                    catRect.bottom > mouseRect.top) {
+                    
+                    // Создаем эффект поимки
+                    createCatchEffect(mouseRect.left + 12, mouseRect.top + 12);
+                    
+                    // Удаляем мышь
+                    gameContainer.removeChild(mouse.element);
+                    mice.splice(index, 1);
+                    
+                    // Увеличиваем счет
+                    score++;
+                    scoreElement.textContent = score;
+                }
+            });
+        }
+
+        function createCatchEffect(x, y) {
+            const effect = document.createElement('div');
+            effect.className = 'catch-effect';
+            effect.style.left = (x - 30) + 'px';
+            effect.style.top = (y - 30) + 'px';
+            gameContainer.appendChild(effect);
+            
+            setTimeout(() => {
+                if (gameContainer.contains(effect)) {
+                    gameContainer.removeChild(effect);
+                }
+            }, 500);
+        }
+
+        // Спавним мышей каждые 2-4 секунды
+        function spawnMice() {
+            if (mice.length < 5) { // Максимум 5 мышей одновременно
+                createMouse();
+            }
+            
+            const nextSpawn = Math.random() * 2000 + 2000; // 2-4 секунды
+            setTimeout(spawnMice, nextSpawn);
+        }
+
+        // Игровой цикл
+        function gameLoop() {
+            checkCollisions();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Запускаем игру
+        setTimeout(spawnMice, 1000); // Первая мышь через секунду
+        gameLoop();
+
+        // Создаем первую мышь сразу
+        createMouse();
+    </script>
+</body>
+</html>
