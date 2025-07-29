@@ -126,154 +126,18 @@
 
         .cat {
             position: absolute;
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 90px;
             transition: all 0.15s ease;
             z-index: 100;
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+            animation: catFloat 2s ease-in-out infinite;
         }
 
-        .cat-body {
+        .cat svg {
             width: 100%;
             height: 100%;
-            background: radial-gradient(ellipse at 35% 25%, #8A9BA8, #6B7C89, #4A5C69);
-            border-radius: 45% 45% 55% 55%;
-            position: relative;
-            animation: catBreathe 2.5s ease-in-out infinite;
-            border: 1px solid #5A6B78;
         }
-
-        .cat-ears {
-            position: absolute;
-            top: -10px;
-        }
-
-        .cat-ear {
-            width: 16px;
-            height: 22px;
-            background: linear-gradient(45deg, #2C2C2C, #1A1A1A, #000000);
-            border-radius: 70% 30% 20% 80%;
-            position: absolute;
-            border: 1px solid #333;
-        }
-
-        .cat-ear::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 8px;
-            height: 12px;
-            background: linear-gradient(45deg, #FF69B4, #FF1493);
-            border-radius: 60% 40% 40% 60%;
-        }
-
-        .cat-ear:first-child {
-            left: 13px;
-            transform: rotate(-25deg);
-        }
-
-        .cat-ear:last-child {
-            right: 13px;
-            transform: rotate(25deg);
-        }
-
-        .cat-face {
-            position: absolute;
-            top: 18px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .cat-eyes {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 6px;
-            justify-content: center;
-        }
-
-        .cat-eye {
-            width: 10px;
-            height: 12px;
-            background: radial-gradient(ellipse at 30% 30%, #32CD32, #228B22, #006400);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            animation: catBlink 4s infinite;
-            position: relative;
-        }
-
-        .cat-eye::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 2px;
-            height: 6px;
-            background: #000;
-            border-radius: 50%;
-        }
-
-        .cat-nose {
-            width: 6px;
-            height: 5px;
-            background: linear-gradient(45deg, #FF69B4, #FF1493);
-            border-radius: 50% 50% 40% 40%;
-            margin: 0 auto 4px;
-            border: 1px solid #C71585;
-        }
-
-        .cat-mouth {
-            width: 14px;
-            height: 6px;
-            border: 2px solid #2C2C2C;
-            border-top: none;
-            border-radius: 0 0 60% 60%;
-            position: relative;
-        }
-
-        .cat-mouth::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: 5px;
-            width: 2px;
-            height: 6px;
-            background: #2C2C2C;
-        }
-
-        .cat-tail {
-            position: absolute;
-            width: 5px;
-            height: 30px;
-            background: linear-gradient(to bottom, #2C2C2C, #1A1A1A, #000000);
-            border-radius: 3px;
-            right: -2px;
-            top: 22px;
-            transform-origin: top;
-            animation: catTailWag 1.2s ease-in-out infinite alternate;
-            border: 1px solid #333;
-        }
-
-        .cat-whiskers {
-            position: absolute;
-            top: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 18px;
-        }
-
-        .cat-whisker {
-            position: absolute;
-            width: 16px;
-            height: 1px;
-            background: #666;
-            border-radius: 1px;
-        }
-
-        .cat-whisker:nth-child(1) { top: 4px; left: 0; transform: rotate(-15deg); }
-        .cat-whisker:nth-child(2) { top: 8px; left: 2px; transform: rotate(-5deg); }
-        .cat-whisker:nth-child(3) { top: 4px; right: 0; transform: rotate(15deg); }
-        .cat-whisker:nth-child(4) { top: 8px; right: 2px; transform: rotate(5deg); }
 
         .mouse {
             position: absolute;
@@ -417,19 +281,9 @@
             100% { filter: brightness(1.1); }
         }
 
-        @keyframes catBreathe {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes catBlink {
-            0%, 90%, 100% { transform: scaleY(1); }
-            95% { transform: scaleY(0.1); }
-        }
-
-        @keyframes catTailWag {
-            0% { transform: rotate(-15deg); }
-            100% { transform: rotate(15deg); }
+        @keyframes catFloat {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-3px) scale(1.02); }
         }
 
         @keyframes mouseMove {
@@ -488,8 +342,8 @@
             }
             
             .cat {
-                width: 80px;
-                height: 80px;
+                width: 90px;
+                height: 100px;
             }
             
             .mouse {
@@ -518,6 +372,11 @@
                 font-size: 12px;
                 padding: 8px;
             }
+
+            .cat {
+                width: 70px;
+                height: 80px;
+            }
         }
     </style>
 </head>
@@ -533,27 +392,84 @@
         </div>
         
         <div class="cat" id="cat">
-            <div class="cat-body">
-                <div class="cat-ears">
-                    <div class="cat-ear"></div>
-                    <div class="cat-ear"></div>
-                </div>
-                <div class="cat-face">
-                    <div class="cat-eyes">
-                        <div class="cat-eye"></div>
-                        <div class="cat-eye"></div>
-                    </div>
-                    <div class="cat-nose"></div>
-                    <div class="cat-mouth"></div>
-                </div>
-                <div class="cat-whiskers">
-                    <div class="cat-whisker"></div>
-                    <div class="cat-whisker"></div>
-                    <div class="cat-whisker"></div>
-                    <div class="cat-whisker"></div>
-                </div>
-                <div class="cat-tail"></div>
-            </div>
+            <svg width="200" height="180" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+                <!-- Тень -->
+                <ellipse cx="100" cy="165" rx="35" ry="6" fill="rgba(0,0,0,0.1)"/>
+                
+                <!-- Голова -->
+                <ellipse cx="100" cy="90" rx="50" ry="45" fill="white" stroke="#DDD" stroke-width="1"/>
+                
+                <!-- Оранжевое пятно на левом ухе и голове -->
+                <path d="M65 60 Q70 45 85 50 Q90 55 85 70 Q75 75 65 70 Z" fill="#FF8C42"/>
+                
+                <!-- Коричневое пятно справа -->
+                <path d="M115 55 Q130 50 135 65 Q140 80 125 85 Q115 80 115 70 Z" fill="#8B4513"/>
+                
+                <!-- Маленькое оранжевое пятнышко -->
+                <ellipse cx="110" cy="75" rx="8" ry="6" fill="#FF8C42"/>
+                
+                <!-- Уши -->
+                <ellipse cx="70" cy="55" rx="15" ry="25" fill="white" stroke="#DDD" stroke-width="1" transform="rotate(-20 70 55)"/>
+                <ellipse cx="130" cy="55" rx="15" ry="25" fill="white" stroke="#DDD" stroke-width="1" transform="rotate(20 130 55)"/>
+                
+                <!-- Оранжевая часть левого уха -->
+                <ellipse cx="70" cy="50" rx="12" ry="20" fill="#FF8C42" transform="rotate(-20 70 50)"/>
+                
+                <!-- Коричневая часть правого уха -->
+                <ellipse cx="130" cy="50" rx="12" ry="20" fill="#8B4513" transform="rotate(20 130 50)"/>
+                
+                <!-- Внутренняя часть ушей -->
+                <ellipse cx="70" cy="55" rx="6" ry="12" fill="#FFB3C1" transform="rotate(-20 70 55)"/>
+                <ellipse cx="130" cy="55" rx="6" ry="12" fill="#FFB3C1" transform="rotate(20 130 55)"/>
+                
+                <!-- Закрытые глазки (улыбающиеся дуги) -->
+                <path d="M80 85 Q85 90 90 85" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round">
+                    <animate attributeName="d" values="M80 85 Q85 90 90 85;M80 87 Q85 88 90 87;M80 85 Q85 90 90 85" dur="4s" repeatCount="indefinite"/>
+                </path>
+                <path d="M110 85 Q115 90 120 85" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round">
+                    <animate attributeName="d" values="M110 85 Q115 90 120 85;M110 87 Q115 88 120 87;M110 85 Q115 90 120 85" dur="4s" repeatCount="indefinite"/>
+                </path>
+                
+                <!-- Носик -->
+                <path d="M97 95 L100 100 L103 95 Q100 92 97 95" fill="#FF9999"/>
+                
+                <!-- Улыбающийся ротик -->
+                <path d="M100 100 Q95 105 88 102" fill="none" stroke="#FF9999" stroke-width="2" stroke-linecap="round"/>
+                <path d="M100 100 Q105 105 112 102" fill="none" stroke="#FF9999" stroke-width="2" stroke-linecap="round"/>
+                
+                <!-- Щёчки (розовые кружочки) -->
+                <circle cx="65" cy="100" r="8" fill="#FFB3C1" opacity="0.6"/>
+                <circle cx="135" cy="100" r="8" fill="#FFB3C1" opacity="0.6"/>
+                
+                <!-- Передние лапки -->
+                <ellipse cx="75" cy="140" rx="12" ry="18" fill="white" stroke="#DDD" stroke-width="1"/>
+                <ellipse cx="125" cy="140" rx="12" ry="18" fill="white" stroke="#DDD" stroke-width="1"/>
+                
+                <!-- Розовые подушечки на лапках -->
+                <ellipse cx="75" cy="150" rx="8" ry="6" fill="#FFB3C1"/>
+                <ellipse cx="125" cy="150" rx="8" ry="6" fill="#FFB3C1"/>
+                
+                <!-- Пальчики на лапках -->
+                <circle cx="70" cy="148" r="2.5" fill="#FFB3C1"/>
+                <circle cx="75" cy="145" r="2" fill="#FFB3C1"/>
+                <circle cx="80" cy="148" r="2.5" fill="#FFB3C1"/>
+                
+                <circle cx="120" cy="148" r="2.5" fill="#FFB3C1"/>
+                <circle cx="125" cy="145" r="2" fill="#FFB3C1"/>
+                <circle cx="130" cy="148" r="2.5" fill="#FFB3C1"/>
+                
+                <!-- Маленькое коричневое пятнышко на мордочке -->
+                <ellipse cx="90" cy="88" rx="3" ry="2" fill="#8B4513"/>
+                
+                <!-- Усики -->
+                <line x1="60" y1="95" x2="45" y2="90" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="60" y1="100" x2="45" y2="100" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="60" y1="105" x2="45" y2="110" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
+                
+                <line x1="140" y1="95" x2="155" y2="90" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="140" y1="100" x2="155" y2="100" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="140" y1="105" x2="155" y2="110" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
         </div>
     </div>
 
@@ -585,12 +501,12 @@
             const touch = e.touches ? e.touches[0] : e;
             const rect = gameContainer.getBoundingClientRect();
             
-            const targetX = touch.clientX - rect.left - 35; // центрируем кота
-            const targetY = touch.clientY - rect.top - 35;
+            const targetX = touch.clientX - rect.left - 40; // центрируем кота
+            const targetY = touch.clientY - rect.top - 45;
             
             // Ограничиваем позицию кота границами экрана
-            catPosition.x = Math.max(0, Math.min(window.innerWidth - 70, targetX));
-            catPosition.y = Math.max(0, Math.min(window.innerHeight - 70, targetY));
+            catPosition.x = Math.max(0, Math.min(window.innerWidth - 80, targetX));
+            catPosition.y = Math.max(0, Math.min(window.innerHeight - 90, targetY));
             
             updateCatPosition();
             createTouchIndicator(touch.clientX - rect.left, touch.clientY - rect.top);
@@ -690,7 +606,7 @@
                 const catRect = cat.getBoundingClientRect();
                 
                 // Увеличенная зона захвата для мобильных устройств
-                const tolerance = 10;
+                const tolerance = 15;
                 
                 if (catRect.left < mouseRect.right + tolerance &&
                     catRect.right > mouseRect.left - tolerance &&
@@ -752,8 +668,8 @@
         window.addEventListener('orientationchange', () => {
             setTimeout(() => {
                 // Обновляем позицию кота при изменении ориентации
-                catPosition.x = Math.min(catPosition.x, window.innerWidth - 70);
-                catPosition.y = Math.min(catPosition.y, window.innerHeight - 70);
+                catPosition.x = Math.min(catPosition.x, window.innerWidth - 80);
+                catPosition.y = Math.min(catPosition.y, window.innerHeight - 90);
                 updateCatPosition();
             }, 100);
         });
